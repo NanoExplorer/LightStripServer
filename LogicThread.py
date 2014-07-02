@@ -27,7 +27,7 @@ class WorkerThread(Thread):
             self.message = data
             self.cond.notifyAll()
 
-    def stop():
+    def stop(self):
         self.keepGoing = False
         with(self.cond):
             self.cond.notifyAll()
