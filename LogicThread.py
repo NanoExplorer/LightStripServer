@@ -1,5 +1,6 @@
 from threading import *
 import time
+import random
 
 class WorkerThread(Thread):
     """Thread that launches the convert() method to make the network server responsive"""
@@ -10,6 +11,6 @@ class WorkerThread(Thread):
         self.start()
         
     def run(self):
-        time.sleep(1) #simulate long running ness
+        time.sleep(random.uniform(0.5,2)) #simulate long running ness
         print self.message
         
