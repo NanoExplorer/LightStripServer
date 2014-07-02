@@ -9,18 +9,26 @@ class WorkerThread(Thread):
         Thread.__init__(self)
         self.message = ""
         self.cond = Condition()
+        self.keepGoing = True
         self.start()
         
     def run(self):
-        while True:
+        while self.keepGoing:
+            if self.message != "":
+                print self.message
             print "waiting..."
+            
             with(self.cond):
                 self.cond.wait()
-                print self.message
+                
 
-    def message(self, data):
+    def sendMessage(self, data):
         with(self.cond):
             self.message = data
             self.cond.notifyAll()
-        
+
+    def stop():
+        self.keepGoing = False
+        with(self.cond):
+            self.cond.notifyAll()
     
