@@ -22,4 +22,4 @@ sock.bind((UDP_IP, UDP_PORT))
 
 while True:
     data, addr = sock.recvfrom(1024) #apparently "buffer size" is 1024 bytes. Don't know how that will affect me
-    prit "Recieved message:", data, "from", addr
+    print "Recieved message:", data, "from", addr
