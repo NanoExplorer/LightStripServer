@@ -5,7 +5,7 @@ class ImageManager:
     def __init__(self):
         self.gamma = bytearray(256)
         for i in range(256):
-            gamma[i] = 0x80 | int(pow(float(i)/255.0, 2.5) * 127.0 + 0.5)
+            self.gamma[i] = 0x80 | int(pow(float(i)/255.0, 2.5) * 127.0 + 0.5)
         self.SKY = (0, 30, 50)
         self.GROUND = (0, 100, 0)
         self.SHIP = (100, 100, 0)
@@ -24,11 +24,11 @@ class ImageManager:
             self.set(self.SKY, x)
         self.set(self.GROUND, 0)
 
-        shipPos = int(position/float(scale) * 32)
+        shipPos = int(position/float(scale) * 30 + 1)
         self.set(self.SHIP, shipPos)
         self.output()
         
-    def set(pixel, position):
+    def set(self, pixel, position):
         """
         Sets a certain pixel of the strip (at 'position') to the color tuple 'pixel'
         """
@@ -37,8 +37,13 @@ class ImageManager:
         self.lights[index] = self.gamma[green]
         self.lights[index + 1] = self.gamma[red]
         self.lights[index + 2] = self.gamma[blue]
+    
+    def blackout(self):
+        for x in range(self.STRIPLEN):
+            self.set((0,0,0), x)
+        self.output()
 
-    def output():
+    def output(self):
         """
         Actually writes the array to the physical strip
         """
@@ -82,6 +87,7 @@ class WorkerThread(Thread):
         with(self.cond):
             self.keepGoing = False
             self.cond.notifyAll()
+            self.lights.blackout()
 
     def processMessage(self):
         data = ""
@@ -97,11 +103,11 @@ class WorkerThread(Thread):
     def getNewScale(self, currentTop, currentPos):
         """ONLY call this method from inside processMessage"""
         if currentTop == 0:
-            changeScale(altitude * 2)
+            self.changeScale(currentPos * 2)
         elif currentTop < currentPos:
-            changeScale(currentPos * 30)
-        elif currentTop > currentPos * 16:
-            changeScale(currentPos)
+            self.changeScale(currentPos * 30)
+        elif currentTop > currentPos * 30:
+            self.changeScale(currentPos)
     
     def changeScale(self, newScale):
         """ONLY call this method from inside getNewScale"""
@@ -109,4 +115,5 @@ class WorkerThread(Thread):
             self.scaleTop = newScale
         else:
             self.scaleTop = 32
+        print self.scaleTop
 #TODO: add speaking scale changer dude.
