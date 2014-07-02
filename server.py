@@ -22,7 +22,7 @@ sock = socket.socket(socket.AF_INET, #internet
 sock.bind((UDP_IP, UDP_PORT))
 
 
-
+worker = LogicThread.WorkerThread()
 while True:
     data, addr = sock.recvfrom(1024) #apparently "buffer size" is 1024 bytes. Don't know how that will affect me
-    worker = LogicThread.WorkerThread(data)
+    worker.message(data)
