@@ -40,6 +40,7 @@ def main():
     while True:
         data, addr = sock.recvfrom(1024) #apparently "buffer size" is 1024 bytes. Don't know how that will affect me
         worker.sendMessage(data)
+        print data
 
 if __name__ == "__main__":
     main()
