@@ -17,14 +17,14 @@ class ImageManager:
         self.lights[self.ARRAYLEN - 1] = 0
 
         self.DEV = '/dev/spidev0.1'
-        self.spidev = file(self.DEV, 'wb')
+        self.spidev = open(self.DEV, 'wb')
         
     def write(self, red,green,blue):
         for x in range(self.STRIPLEN):
             self.setpixel((red,green,blue), x)
         self.output()
         
-    def set(self, pixel, position):
+    def setpixel(self, pixel, position):
         """
         Sets a certain pixel of the strip (at 'position') to the color tuple 'pixel'
         """
@@ -36,7 +36,7 @@ class ImageManager:
     
     def blackout(self):
         for x in range(self.STRIPLEN):
-            self.set((0,0,0), x)
+            self.setpixel((0,0,0), x)
         self.output()
 
     def output(self):
@@ -62,7 +62,7 @@ class WorkerThread(Thread):
         while self.keepGoing:
             if self.message != "":
                 self.processMessage()
-            #print "waiting..."
+            #print("waiting...")
             
             with(self.cond):
                 self.cond.wait()
@@ -75,7 +75,7 @@ class WorkerThread(Thread):
     """
     def sendMessage(self, data):
         with(self.cond):
-            self.message = data
+            self.message = data.decode('utf-8').strip()
             self.cond.notifyAll()
 
     def stop(self):
@@ -85,8 +85,7 @@ class WorkerThread(Thread):
             self.lights.blackout()
 
     def processMessage(self):
-        data = ""
-        
+        print(self.message)
         info = self.message.split(':')
         red=int(info[0])
         green=int(info[1])

@@ -22,30 +22,36 @@ IP = "0.0.0.0"
 PORT = 12625
 
 
-worker = DeskLogicThread.WorkerThread()
+
 
 def signal_handler(signal, frame):
     print("You pressed CTRL-C! Exiting...")
     worker.stop()
     sys.exit(1)
-    
-signal.signal(signal.SIGINT, signal_handler)
-
 
 def main():
     sock = socket.socket(socket.AF_INET, #internet
                          socket.SOCK_STREAM) #UDP
     sock.bind((IP, PORT))
-    s.listen(0)
+    sock.listen(0)
     while True:
-        conn, addr = s.accept()
+        conn, addr = sock.accept()
         while True:
             data = conn.recv(20) #apparently "buffer size" is 20 bytes. Don't know how that will affect me
             if not data: break
             worker.sendMessage(data)
             print("Received: {}".format(str(data)))
         conn.close()
-if __name__ == "__main__":
-    main()
 
+try:    
+    worker = DeskLogicThread.WorkerThread()    
+    signal.signal(signal.SIGINT, signal_handler)
+
+
+    if __name__ == "__main__":
+    
+    
+        main()
+finally:
+    worker.stop()
 
