@@ -12,7 +12,7 @@ Starts a UDP server on port 12625 (configurable) and listens for data.
 
 """
 import socket
-import LogicThread
+import KSPLogicThread
 import sys
 import signal
 
