@@ -19,7 +19,10 @@ class ImageManager:
         
     def write(self, red,green,blue):
         for x in range(self.STRIPLEN):
-            self.setpixel((red,green,blue), x)
+            if x < 3:
+                self.setpixel((0,0,0),x)
+            else:
+                self.setpixel((red,green,blue), x)
         self.output()
         
     def setpixel(self, pixel, position):
