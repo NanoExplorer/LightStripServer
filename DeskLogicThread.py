@@ -7,8 +7,6 @@ class ImageManager:
         for i in range(256):
             self.gamma[i] = 0x80 | int(pow(float(i)/255.0, 2.5) * 127.0 + 0.5)
 
-
-
         self.STRIPLEN = 32 # configurable to however many pixels you have on your led strip
         self.COLORLEN = self.STRIPLEN * 3 #Colorlen is the size of the part of the array containing actual
                                           #color information.
@@ -85,9 +83,13 @@ class WorkerThread(Thread):
             self.lights.blackout()
 
     def processMessage(self):
-        print(self.message)
-        info = self.message.split(':')
-        red=int(info[0])
-        green=int(info[1])
-        blue=int(info[2])
-        self.lights.write(red,green,blue)
+        try:
+            info = self.message.split(':')
+            red=int(info[0])
+            green=int(info[1])
+            blue=int(info[2])
+            if red>=0 and red<=255 and blue>=0 and blue<=255 and green>=0 and green<=255:
+                self.lights.write(red,green,blue)
+        except:
+            pass
+        
