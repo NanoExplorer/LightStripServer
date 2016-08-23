@@ -10,16 +10,16 @@ class ImageManager:
         self.STRIPLEN = 32 # configurable to however many pixels you have on your led strip
         self.COLORLEN = self.STRIPLEN * 3 #Colorlen is the size of the part of the array containing actual
                                           #color information.
-        self.ARRAYLEN = self.COLORLEN + 1 #Arraylen is the size of the whole array.
+        self.ARRAYLEN = self.COLORLEN + 2 #Arraylen is the size of the whole array.
         self.lights = bytearray([0x80 for x in range(self.ARRAYLEN)])
-        self.lights[self.ARRAYLEN - 1] = 0
-
+        self.lights[0] = 0
+        self.lights[self.ARRAYLEN-1] = 0x80
         self.DEV = '/dev/spidev0.1'
         self.spidev = open(self.DEV, 'wb')
         
     def write(self, red,green,blue):
         for x in range(self.STRIPLEN):
-            if x < 3:
+            if x < 2:
                 self.setpixel((0,0,0),x)
             else:
                 self.setpixel((red,green,blue), x)
@@ -31,9 +31,9 @@ class ImageManager:
         """
         index = position * 3
         red, green, blue = pixel
-        self.lights[index] = self.gamma[green]
-        self.lights[index + 1] = self.gamma[red]
-        self.lights[index + 2] = self.gamma[blue]
+        self.lights[index + 1] = self.gamma[green]
+        self.lights[index + 2] = self.gamma[red]
+        self.lights[index + 3] = self.gamma[blue]
     
     def blackout(self):
         for x in range(self.STRIPLEN):
