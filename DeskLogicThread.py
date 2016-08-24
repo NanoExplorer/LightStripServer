@@ -13,10 +13,10 @@ class ImageManager:
         self.ARRAYLEN = self.COLORLEN + 2 #Arraylen is the size of the whole array.
         self.lights = bytearray([0x80 for x in range(self.ARRAYLEN)])
         self.lights[0] = 0
-        self.lights[self.ARRAYLEN-1] = 0x80
+        
         self.DEV = '/dev/spidev0.1'
         self.spidev = open(self.DEV, 'wb')
-        
+        self.periodicRefresh(600)
     def write(self, red,green,blue):
         for x in range(self.STRIPLEN):
             if x < 2:
@@ -35,10 +35,15 @@ class ImageManager:
         self.lights[index + 2] = self.gamma[red]
         self.lights[index + 3] = self.gamma[blue]
     
-    def blackout(self):
+    def stop(self):
+        try:
+            self.timer.cancel()
+        except:
+            time.sleep(1)
         for x in range(self.STRIPLEN):
             self.setpixel((0,0,0), x)
         self.output()
+
 
     def output(self):
         """
@@ -46,6 +51,11 @@ class ImageManager:
         """
         self.spidev.write(self.lights)
         self.spidev.flush()
+    def periodicRefresh(self,interval):
+        self.timer = Timer(interval,self.periodicRefresh,args=[interval])
+        #print("AUTO REFRESH")
+        self.output()
+        self.timer.start()
 
 class WorkerThread(Thread):
     """Aims to make the network server very responsive"""
@@ -83,7 +93,8 @@ class WorkerThread(Thread):
         with(self.cond):
             self.keepGoing = False
             self.cond.notifyAll()
-            self.lights.blackout()
+            self.lights.stop()
+
 
     def processMessage(self):
         try:
