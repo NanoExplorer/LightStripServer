@@ -15,6 +15,15 @@ import socket
 import DeskLogicThread
 import sys
 import signal
+import logging
+logging.basicConfig(format='%(asctime)s %(message)s',
+                    datefmt='%m/%d/%Y %I:%M:%S %p',
+                    level=logging.INFO,
+                    filename="/var/log/desklight.log")
+root = logging.getLogger()
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+root.addHandler(ch)
 
 
 #feel free to change these values
@@ -25,23 +34,29 @@ PORT = 12625
 
 
 def signal_handler(signal, frame):
-    print("You pressed CTRL-C! Exiting...")
+    logging.info("You pressed CTRL-C! Exiting...")
     worker.stop()
     sys.exit(1)
 
 def main():
+    logging.info("Server starting.")
     sock = socket.socket(socket.AF_INET, #internet
-                         socket.SOCK_STREAM) #UDP
+                         socket.SOCK_STREAM) #TCP
     sock.bind((IP, PORT))
-    sock.listen(0)
+    sock.listen(1)
     while True:
         conn, addr = sock.accept()
+        logging.info("Connection established with {}.".format(addr[0]))
         while True:
             data = conn.recv(20) #apparently "buffer size" is 20 bytes. Don't know how that will affect me
             if not data: break
-            worker.sendMessage(data)
-            print("Received: {}".format(str(data)))
+            try:
+                worker.sendMessage(data)
+                logging.info("Received: {}".format(str(data)))
+            except:
+                logging.warning("Received malformed data: {}".format(str(data)))
         conn.close()
+        logging.info("Connection closed.")
 
 try:    
     worker = DeskLogicThread.WorkerThread()    
