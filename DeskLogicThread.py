@@ -12,10 +12,14 @@ class ImageManager:
         self.STRIPLEN = 32+ 24 # configurable to however many pixels you have on your led strip
         self.COLORLEN = self.STRIPLEN * 3 #Colorlen is the size of the part of the array containing actual
                                           #color information.
-        self.ARRAYLEN = self.COLORLEN + 2 #Arraylen is the size of the whole array.
+        self.ARRAYLEN = self.COLORLEN + 3 #Arraylen is the size of the whole array.
+        #the extra 3 pixels are for zeros to reset the array. For some reason
+        #the second set of lights takes two zeros to reset completely...
+        #The first set only takes one.
         self.lights = bytearray([0x80 for x in range(self.ARRAYLEN)])
         self.lights[0] = 0
         self.lights[self.ARRAYLEN-1] = 0
+        self.lights[self.ARRAYLEN-2] = 0
         self.DEV = '/dev/spidev1.0'
         self.spidev = open(self.DEV, 'wb')
         self.allow_anim = 0
@@ -70,6 +74,7 @@ class ImageManager:
         for x in range(self.STRIPLEN):
             self.setpixel((0,0,0), x)
         self.output()
+        self.spidev.close()
     def animate(self, animationName):
         self.animation = animations.getAnimator(animationName,self.STRIPLEN)
         self.allow_anim += 1
