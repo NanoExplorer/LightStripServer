@@ -76,8 +76,8 @@ class ImageManager:
         for x in range(self.STRIPLEN):
             self.setpixel((0,0,0), x)
         self.output()
-        self.spidev.close()
-
+        #self.spidev.close()
+        #Not really needed, the OS will take care of it :)
     def animate(self, animationName, cond):
         self.animation = animations.getAnimator(animationName,self.STRIPLEN)
         self.allow_anim += 1
