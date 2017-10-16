@@ -96,7 +96,7 @@ class ImageManager:
                         self.setpixel(rgb,i)
                 print('pushing anim output')
                 self.output()
-                self.anim = Timer(0.03,self.animupdate,args=[anim_ID])
+                self.anim = Timer(0.03,self.animupdate,args=[anim_ID,cond])
                 self.anim.start()
 
     def output(self):
