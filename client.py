@@ -6,7 +6,9 @@ UDP_PORT = 12625
 
 sock = socket.socket(socket.AF_INET, #internet
                      socket.SOCK_DGRAM) #UDP
-for x in [x for x in range(50)]:
-    message = "This is packet number " + str(x)
+for x in [float(x+1) ** float(x+1) for x in range(50)]:
+    prefix = "ALT:"
+    message = prefix + str(x)
     sock.sendto(message, (UDP_IP, UDP_PORT))
-    #time.sleep(.5)
+    print message
+    time.sleep(.5)
