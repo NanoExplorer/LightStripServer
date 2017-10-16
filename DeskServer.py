@@ -12,6 +12,7 @@ Starts a UDP server on port 12625 (configurable) and listens for data.
 
 """
 import socket
+import dropbox
 import DeskLogicThread
 import sys
 import signal
@@ -30,7 +31,13 @@ root.addHandler(ch)
 IP = "0.0.0.0"
 PORT = 12625
 
-
+def save_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    token = "tHQ-CTD3rZIAAAAAAAABmpeuGZ3rYru6HKPHLxMEqfC6PdpWdQwj1WjBrSMdYTQS"
+    dbclient = dropbox.Dropbox(token)
+    dbclient.files_upload(str.encode(ip),'/ip.txt',mode=dropbox.files.WriteMode('overwrite'))
 
 
 def signal_handler(signal, frame):
@@ -40,25 +47,27 @@ def signal_handler(signal, frame):
 
 def main():
     logging.info("Server starting.")
-    sock = socket.socket(socket.AF_INET, #internet
-                         socket.SOCK_STREAM) #TCP
-    sock.bind((IP, PORT))
-    sock.listen(1)
-    while True:
-        conn, addr = sock.accept()
-        logging.info("Connection established with {}.".format(addr[0]))
+    with socket.socket(socket.AF_INET, #internet
+                         socket.SOCK_STREAM) as sock: #TCP
+        sock.bind((IP, PORT))
+        sock.listen(1)
         while True:
-            data = conn.recv(20) #apparently "buffer size" is 20 bytes. Don't know how that will affect me
-            if not data: break
-            try:
-                worker.sendMessage(data)
-                logging.info("Received: {}".format(str(data)))
-            except:
-                logging.warning("Received malformed data: {}".format(str(data)))
-        conn.close()
-        logging.info("Connection closed.")
+            conn, addr = sock.accept()
+            logging.info("Connection established with {}.".format(addr[0]))
+            while True:
+                data = conn.recv(20) #apparently "buffer size" is 20 bytes. Don't know how that will affect me
+                if not data: break
+                try:
+                    worker.sendMessage(data)
+                    logging.info("Received: {}".format(str(data)))
+                except:
+                    logging.warning("Received malformed data: {}".format(str(data)))
+            conn.close()
+            logging.info("Connection closed.")
+
 
 try:    
+    save_ip_address()
     worker = DeskLogicThread.WorkerThread()    
     signal.signal(signal.SIGINT, signal_handler)
 
