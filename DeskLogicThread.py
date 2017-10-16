@@ -28,6 +28,7 @@ class ImageManager:
 
     def write(self, red,green,blue):
         self.allow_anim = 0
+        print('set anim 0')
         for x in range(self.STRIPLEN):
             if x < 0:
                 self.setpixel((0,0,0),x)
@@ -41,6 +42,7 @@ class ImageManager:
                     green2 = green - 1 + (x+2)%3
                 """
                 self.setpixel((red,green,blue), x)
+        print('outputting solid color')
         self.output()
         
     def setpixel(self, pixel, position):
@@ -75,23 +77,27 @@ class ImageManager:
             self.setpixel((0,0,0), x)
         self.output()
         self.spidev.close()
-    def animate(self, animationName):
+
+    def animate(self, animationName, cond):
         self.animation = animations.getAnimator(animationName,self.STRIPLEN)
         self.allow_anim += 1
-        self.animupdate(self.allow_anim)
-    def animupdate(self,anim_ID):
+        self.animupdate(self.allow_anim,cond)
+    def animupdate(self,anim_ID,cond):
         if self.allow_anim == anim_ID:
-            self.animation.update()
-            l = self.animation.getLights()
-            if self.animation.needsRaw():
-                for i,rgb in enumerate(l):
-                    self.setrawpixel(rgb,i)
-            else:
-                for i,rgb in enumerate(l):
-                    self.setpixel(rgb,i)
-            self.output()
-            self.anim = Timer(0.03,self.animupdate,args=[anim_ID])
-            self.anim.start()
+            print('anim allowed, updating')
+            with(cond):
+                self.animation.update()
+                l = self.animation.getLights()
+                if self.animation.needsRaw():
+                    for i,rgb in enumerate(l):
+                        self.setrawpixel(rgb,i)
+                else:
+                    for i,rgb in enumerate(l):
+                        self.setpixel(rgb,i)
+                print('pushing anim output')
+                self.output()
+                self.anim = Timer(0.03,self.animupdate,args=[anim_ID])
+                self.anim.start()
 
     def output(self):
         """
@@ -120,13 +126,12 @@ class WorkerThread(Thread):
         
         
     def run(self):
-        while self.keepGoing:
-            if self.message != "":
-                self.processMessage()
-            #print("waiting...")
-            
-            with(self.cond):
+        with(self.cond):
+            while self.keepGoing:
+                if self.message != "":
+                    self.processMessage()
                 self.cond.wait()
+        
                 
     """
     Posts a message and tells the run method to process it.
@@ -146,7 +151,7 @@ class WorkerThread(Thread):
     def processMessage(self):
         if self.message.split('.')[0] == 'anim':
             try:
-                self.lights.animate(self.message.split('.')[1])
+                self.lights.animate(self.message.split('.')[1],self.cond)
             except:
                 print(traceback.format_exc())
         else:
