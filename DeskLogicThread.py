@@ -15,7 +15,7 @@ class ImageManager:
         self.ARRAYLEN = self.COLORLEN + 2 #Arraylen is the size of the whole array.
         self.lights = bytearray([0x80 for x in range(self.ARRAYLEN)])
         self.lights[0] = 0
-        
+        self.lights[self.ARRAYLEN-1] = 0
         self.DEV = '/dev/spidev1.0'
         self.spidev = open(self.DEV, 'wb')
         self.allow_anim = 0
