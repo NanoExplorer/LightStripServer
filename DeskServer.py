@@ -17,6 +17,7 @@ import DeskLogicThread
 import sys
 import signal
 import logging
+import time
 logging.basicConfig(format='%(asctime)s %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p',
                     level=logging.INFO,
@@ -43,7 +44,8 @@ def save_ip_address():
 def signal_handler(signal, frame):
     logging.info("You pressed CTRL-C! Exiting...")
     worker.stop()
-    sys.exit(1)
+    time.sleep(2)
+    exit()
 
 def main():
     logging.info("Server starting.")
@@ -65,17 +67,12 @@ def main():
             conn.close()
             logging.info("Connection closed.")
 
-
-try:    
-    save_ip_address()
-    worker = DeskLogicThread.WorkerThread()    
-    signal.signal(signal.SIGINT, signal_handler)
-
-
-    if __name__ == "__main__":
-    
-    
+if __name__ == "__main__":
+    try:    
+        save_ip_address()
+        worker = DeskLogicThread.WorkerThread()    
+        signal.signal(signal.SIGINT, signal_handler)   
         main()
-finally:
-    worker.stop()
+    finally:
+        worker.stop()
 
