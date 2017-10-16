@@ -28,7 +28,7 @@ class ImageManager:
 
     def write(self, red,green,blue):
         self.allow_anim = 0
-        print('set anim 0')
+        #print('set anim 0')
         for x in range(self.STRIPLEN):
             if x < 0:
                 self.setpixel((0,0,0),x)
@@ -42,7 +42,7 @@ class ImageManager:
                     green2 = green - 1 + (x+2)%3
                 """
                 self.setpixel((red,green,blue), x)
-        print('outputting solid color')
+        #print('outputting solid color')
         self.output()
         
     def setpixel(self, pixel, position):
@@ -84,7 +84,7 @@ class ImageManager:
         self.animupdate(self.allow_anim,cond)
     def animupdate(self,anim_ID,cond):
         if self.allow_anim == anim_ID:
-            print('anim allowed, updating')
+            #print('anim allowed, updating')
             with(cond):
                 self.animation.update()
                 l = self.animation.getLights()
@@ -94,7 +94,7 @@ class ImageManager:
                 else:
                     for i,rgb in enumerate(l):
                         self.setpixel(rgb,i)
-                print('pushing anim output')
+                #print('pushing anim output')
                 self.output()
                 self.anim = Timer(0.03,self.animupdate,args=[anim_ID,cond])
                 self.anim.start()
