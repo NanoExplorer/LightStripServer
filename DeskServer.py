@@ -35,7 +35,9 @@ def save_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     ip = s.getsockname()[0]
-    token = "tHQ-CTD3rZIAAAAAAAABmpeuGZ3rYru6HKPHLxMEqfC6PdpWdQwj1WjBrSMdYTQS"
+    with open('secret','r') as sf:
+        token = sf.read()
+        #Dear future me: DON'T PUT THE GITHUB KEY INTO THE SOURCE CODE AND PUSH IT TO GH.
     dbclient = dropbox.Dropbox(token)
     dbclient.files_upload(str.encode(ip),'/ip.txt',mode=dropbox.files.WriteMode('overwrite'))
 
