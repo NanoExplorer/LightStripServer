@@ -9,7 +9,7 @@ class ImageManager:
         for i in range(256):
             self.gamma[i] = 0x80 | int(pow(float(i)/255.0, 2.5) * 127.0 + 0.5)
 
-        self.STRIPLEN = 32+ 24 # configurable to however many pixels you have on your led strip
+        self.STRIPLEN = 32+ 23 # configurable to however many pixels you have on your led strip
         self.COLORLEN = self.STRIPLEN * 3 #Colorlen is the size of the part of the array containing actual
                                           #color information.
         self.ARRAYLEN = self.COLORLEN + 3 #Arraylen is the size of the whole array.
