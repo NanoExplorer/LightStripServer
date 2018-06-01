@@ -17,6 +17,7 @@ import DeskLogicThread
 import sys
 import signal
 import logging
+import time
 logging.basicConfig(format='%(asctime)s %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p',
                     level=logging.INFO,
@@ -47,6 +48,13 @@ def signal_handler(signal, frame):
     worker.stop()
     sys.exit(1)
 
+def redlight():
+    stuff="30:0:0".encode(encoding="UTF-8")
+    #30 is the lowest level of red. Set it any lower and it'll be off. I promise :)
+    worker.sendMessage(stuff)
+    while True:
+        time.sleep(700)
+
 def main():
     logging.info("Server starting.")
     with socket.socket(socket.AF_INET, #internet
@@ -69,11 +77,12 @@ def main():
 
 if __name__ == "__main__":
     try:    
-        save_ip_address()
+        #save_ip_address()
         worker = DeskLogicThread.WorkerThread()    
         signal.signal(signal.SIGINT, signal_handler)   
         
-        main()
+        #main()
+        redlight()
     finally:
         worker.stop()
 

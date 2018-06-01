@@ -163,5 +163,5 @@ class WorkerThread(Thread):
                 if red>=0 and red<=255 and blue>=0 and blue<=255 and green>=0 and green<=255:
                     self.lights.write(red,green,blue)
             except:
-                pass
+                print(traceback.format_exc())
         
