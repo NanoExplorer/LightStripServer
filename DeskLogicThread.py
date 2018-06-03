@@ -28,23 +28,26 @@ class ImageManager:
 
     def write(self, red,green,blue):
         self.allow_anim = 0
+        r_off=[]
+        g_off=[]
+        b_off=[]
         #print('set anim 0')
         if red < 28:
             red_pixels_on = int(self.STRIPLEN*red/28)
             num_reds_off=self.STRIPLEN-red_pixels_on 
-            r_off=[]
+
             for i in range(num_reds_off):
                 r_off.append(int((i+1)*self.STRIPLEN/(num_reds_off+1)))
         if green < 28:
             green_pixels_on = int(self.STRIPLEN*green/28)
             num_grns_off=self.STRIPLEN-green_pixels_on 
-            g_off=[]
+
             for i in range(num_grns_off):
                 g_off.append(int((i+1)*self.STRIPLEN/(num_grns_off+1)))
         if blue < 28:
             blu_pixels_on = int(self.STRIPLEN*blue/28)
             num_blus_off=self.STRIPLEN-blu_pixels_on 
-            b_off=[]
+
             for i in range(num_blus_off):
                 b_off.append(int((i+1)*self.STRIPLEN/(num_blus_off+1)))
 
