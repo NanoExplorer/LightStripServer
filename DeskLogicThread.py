@@ -7,7 +7,10 @@ class ImageManager:
     def __init__(self):
         self.gamma = bytearray(256)
         for i in range(256):
-            self.gamma[i] = 0x80 | int(pow(float(i)/255.0, 2.5) * 127.0 + 0.5)
+            if i>0 and i<28:
+                self.gamma[i] = 0x81
+            else:
+                self.gamma[i] = 0x80 | int(pow(float(i)/255.0, 2.5) * 127.0 + 0.5)
 
         self.STRIPLEN = 32+ 23 # configurable to however many pixels you have on your led strip
         self.COLORLEN = self.STRIPLEN * 3 #Colorlen is the size of the part of the array containing actual
@@ -35,19 +38,16 @@ class ImageManager:
         if red < 28:
             red_pixels_on = int(self.STRIPLEN*red/28)
             num_reds_off=self.STRIPLEN-red_pixels_on 
-
             for i in range(num_reds_off):
                 r_off.append(int((i+1)*self.STRIPLEN/(num_reds_off+1)))
         if green < 28:
             green_pixels_on = int(self.STRIPLEN*green/28)
             num_grns_off=self.STRIPLEN-green_pixels_on 
-
             for i in range(num_grns_off):
                 g_off.append(int((i+1)*self.STRIPLEN/(num_grns_off+1)))
         if blue < 28:
             blu_pixels_on = int(self.STRIPLEN*blue/28)
             num_blus_off=self.STRIPLEN-blu_pixels_on 
-
             for i in range(num_blus_off):
                 b_off.append(int((i+1)*self.STRIPLEN/(num_blus_off+1)))
 
