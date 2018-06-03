@@ -11,13 +11,8 @@ Occidentalis, but might not work with default Wheezy.
 Starts a UDP server on port 12625 (configurable) and listens for data.
 
 """
-import socket
-import dropbox
-import DeskLogicThread
 import sys
-import signal
 import logging
-import time
 logging.basicConfig(format='%(asctime)s %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p',
                     level=logging.INFO,
@@ -26,7 +21,11 @@ root = logging.getLogger()
 ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.DEBUG)
 root.addHandler(ch)
-
+import time
+import socket
+import dropbox
+import DeskLogicThread
+import signal
 
 #feel free to change these values
 IP = "0.0.0.0"
@@ -40,7 +39,7 @@ def save_ip_address():
         token = sf.read()
         #Dear future me: DON'T PUT THE GITHUB KEY INTO THE SOURCE CODE AND PUSH IT TO GH.
     dbclient = dropbox.Dropbox(token)
-    dbclient.files_upload(str.encode(ip),'/ip.txt',mode=dropbox.files.WriteMode('overwrite'))
+    dbclient.files_upload(str.encode(ip),'/ip_zeropi.txt',mode=dropbox.files.WriteMode('overwrite'))
 
 
 def signal_handler(signal, frame):
@@ -77,12 +76,12 @@ def main():
 
 if __name__ == "__main__":
     try:    
-        #save_ip_address()
+        save_ip_address()
         worker = DeskLogicThread.WorkerThread()    
         signal.signal(signal.SIGINT, signal_handler)   
         
-        #main()
-        redlight()
+        main()
+        #redlight()
     finally:
         worker.stop()
 
