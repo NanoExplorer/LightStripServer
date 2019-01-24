@@ -3,7 +3,7 @@ import time
 import math
 import random
 #import numpy as np
-
+import colorsys
 def _rgb_component(c,x,h):
     h = h % 6
     if h<1 and h>=0:
@@ -160,4 +160,5 @@ class Rainbow(Animation):
             hue = self._rainbow(i+delta/self.slowness)%1
             #if i == 0:
             #    print(hue)
-            self.lights[i] = hsvToRgb(hue,1,1)
+            r,g,b=hsv_to_rgb(hue,1,1)
+            self.lights[i] = colorsys,(r*255,g*255,b*255)
