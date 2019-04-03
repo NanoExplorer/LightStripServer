@@ -159,6 +159,10 @@ class WorkerThread(Thread):
         with(self.cond):
             self.message = data.strip()
             self.cond.notifyAll()
+    def messageOverride(self, data):
+        with(self.cond):
+            self.message = data
+            self.cond.notifyAll()
 
     def stop(self):
         with(self.cond):
