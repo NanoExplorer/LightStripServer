@@ -24,7 +24,7 @@ root.addHandler(ch)
 import time
 import socket
 import websockets
-import dropbox
+#import dropbox
 import DeskLogicThread
 import signal
 import asyncio
@@ -33,15 +33,15 @@ import asyncio
 IP = "0.0.0.0"
 PORT = 8765
 
-def save_ip_address():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip = s.getsockname()[0]
-    with open('secret','r') as sf:
-        token = sf.read()
-        #Dear future me: DON'T PUT THE DROPBOX KEY INTO THE SOURCE CODE AND PUSH IT TO GH.
-    dbclient = dropbox.Dropbox(token)
-    dbclient.files_upload(str.encode(ip),'/ip_zeropi.txt',mode=dropbox.files.WriteMode('overwrite'))
+# def save_ip_address():
+#     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#     s.connect(("8.8.8.8", 80))
+#     ip = s.getsockname()[0]
+#     with open('secret','r') as sf:
+#         token = sf.read()
+#         #Dear future me: DON'T PUT THE DROPBOX KEY INTO THE SOURCE CODE AND PUSH IT TO GH.
+#     dbclient = dropbox.Dropbox(token)
+#     dbclient.files_upload(str.encode(ip),'/ip_zeropi.txt',mode=dropbox.files.WriteMode('overwrite'))
 
 
 def signal_handler(signal, frame):
