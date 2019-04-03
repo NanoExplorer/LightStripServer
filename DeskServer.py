@@ -76,8 +76,9 @@ def main():
 
 if __name__ == "__main__":
     try:    
-        save_ip_address()
+        #save_ip_address()
         worker = DeskLogicThread.WorkerThread()    
+        worker.messageOverride("anim.fireworks")
         signal.signal(signal.SIGINT, signal_handler)   
         
         main()
