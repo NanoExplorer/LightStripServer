@@ -4,32 +4,32 @@ import math
 import random
 #import numpy as np
 import colorsys
-def _rgb_component(c,x,h):
-    h = h % 6
-    if h<1 and h>=0:
-        return (c,x,0)
-    elif h<2 and h>=1:
-        return (x,c,0)
-    elif h<3 and h>=2:
-        return(0,c,x)
-    elif h<4 and h>=3:
-        return(0,x,c)
-    elif h<5 and h>=4:
-        return(x,0,c)
-    elif h<6 and h>=5:
-        return(c,0,x)
+# def _rgb_component(c,x,h):
+#     h = h % 6
+#     if h<1 and h>=0:
+#         return (c,x,0)
+#     elif h<2 and h>=1:
+#         return (x,c,0)
+#     elif h<3 and h>=2:
+#         return(0,c,x)
+#     elif h<4 and h>=3:
+#         return(0,x,c)
+#     elif h<5 and h>=4:
+#         return(x,0,c)
+#     elif h<6 and h>=5:
+#         return(c,0,x)
 
-def hsvToRgb(h,s,v):
-    """h,s,v are all numbers from 0 to 1"""
-    if s == 0:
-        r = g = b = v
-        return (r,g,b)
-    else:
-        c = v*s
-        x = c*(1-abs((6*h)%2 - 1))
-        r,g,b = _rgb_component(c,x,6*h)#
-        m = v-c
-        return (int((r+m)*255), int((g+m)*255), int((b+m)*255))
+# def hsvToRgb(h,s,v):
+#     """h,s,v are all numbers from 0 to 1"""
+#     if s == 0:
+#         r = g = b = v
+#         return (r,g,b)
+#     else:
+#         c = v*s
+#         x = c*(1-abs((6*h)%2 - 1))
+#         r,g,b = _rgb_component(c,x,6*h)#
+#         m = v-c
+#         return (int((r+m)*255), int((g+m)*255), int((b+m)*255))
 
 def getAnimator(name,length):
     name = name.strip()
@@ -252,5 +252,5 @@ class Rainbow(Animation):
             hue = self._rainbow(i+delta/self.slowness)%1
             #if i == 0:
             #    print(hue)
-            r,g,b=hsv_to_rgb(hue,1,1)
+            r,g,b=colorsys.hsv_to_rgb(hue,1,1)
             self.lights[i] = colorsys,(r*255,g*255,b*255)
