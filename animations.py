@@ -41,6 +41,9 @@ def getAnimator(name,length):
         return Strobe(length)
     if name == 'fireworks':
         return Fireworks(length)
+    if name == 'colorcycle':
+        return ColorCycle(length)
+
 def _addTuples(a,b):
     c1 = a[0] + b[0]
     c2 = a[1] + b[1]
@@ -254,3 +257,16 @@ class Rainbow(Animation):
             #    print(hue)
             r,g,b=colorsys.hsv_to_rgb(hue,1,1)
             self.lights[i] = (int(r*255),int(g*255),int(b*255))
+
+class ColorCycle(Animation):
+    def __init__(self,length):
+        Animation.__init__(self,length)
+        self.slowness=30
+        self.currHue=0
+    def update(self):
+        delta=time.time()-self.startTime
+        currHue=(delta/self.slowness)%1
+        r,g,b=[int(x*255) for x in colorsys.hsv_to_rgb(currHue,1,1)]
+        for i in self.arraylen:
+            self.lights[i] = (r,g,b)
+
