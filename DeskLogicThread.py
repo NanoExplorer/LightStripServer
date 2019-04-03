@@ -157,7 +157,7 @@ class WorkerThread(Thread):
     """
     def sendMessage(self, data):
         with(self.cond):
-            self.message = data.decode('utf-8').strip()
+            self.message = data.strip()
             self.cond.notifyAll()
     def messageOverride(self, data):
         with(self.cond):
