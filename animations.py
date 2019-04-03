@@ -253,4 +253,4 @@ class Rainbow(Animation):
             #if i == 0:
             #    print(hue)
             r,g,b=colorsys.hsv_to_rgb(hue,1,1)
-            self.lights[i] = colorsys,(r*255,g*255,b*255)
+            self.lights[i] = (r*255,g*255,b*255)
