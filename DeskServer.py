@@ -55,6 +55,7 @@ def redlight():
     worker.sendMessage(stuff)
     while True:
         time.sleep(700)
+
 @asyncio.coroutine
 def rcv_color(websocket,path):
     
@@ -82,7 +83,7 @@ def rcv_color(websocket,path):
 def main():
     logging.info("Server starting.")
     start_server=websockets.serve(rcv_color,IP,PORT)
-    
+
     asyncio.get_event_loop().run_until_complete(start_server)
     asyncio.get_event_loop().run_forever()
 
