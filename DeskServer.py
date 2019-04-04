@@ -28,6 +28,7 @@ import websockets
 import DeskLogicThread
 import signal
 import asyncio
+import subprocess
 
 #feel free to change these values
 IP = "0.0.0.0"
@@ -93,7 +94,7 @@ if __name__ == "__main__":
         worker = DeskLogicThread.WorkerThread()    
         worker.messageOverride("anim.fireworks")
         signal.signal(signal.SIGINT, signal_handler)   
-        
+        subprocess.Popen(["python3","-m","http.server","80","--directory","web/"])
         main()
         #redlight()
     finally:

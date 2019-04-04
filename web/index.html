@@ -1,0 +1,100 @@
+<html>
+<head>
+<script src="res/iro.min.js"></script>
+<script src="res/iro-dynamic-css.min.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+
+
+<div class="home">
+    <div class="main">
+      <div class="main__frame main__frame--left"></div>
+      <div class="main__frame main__frame--right"></div>
+      <div class="main__frame main__frame--top"></div>
+      <div class="main__frame main__frame--bottom"></div>
+      <div class="main__content">
+        <div class="hero">
+          <div class="hero__half intro">            <h3 class="intro__sub">An HSV color picker widget for JavaScript, with a modern SVG-based user interface</h3>
+            <div class="intro__buttons">
+              <div class="button button--invert" onclick="sendColor('0','0','0','off')" id="off">Off</div>
+              <div class="button button--invert" onclick="anim('rainbow')" id="rainbow">Rainbow</div>
+              <div class="button button--invert" onclick="anim('hyperspace')" id="hyperspace">Hyperspace</div>
+          </div>
+              <div class="intro__buttons">
+              <div class="button button--invert" onclick="anim('fireworks')" id="fireworks">Fireworks</div>
+              <div class="button button--invert" onclick="anim('strobe')" id="strobe">Strobe</div>
+              <div class="button button--invert" onclick="sendColor('255','255','255','white')" id="white">White</div>
+            </div>
+        
+        <div class="intro__buttons">
+        	<div class="button button--invert" onclick="anim('colorcycle')" id="colorcycle">Color Cycle</div>
+          </div>
+          </div>
+          <div class="hero__half demo">
+	<div id="color-picker-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<!--
+<script>
+import Logo from "./icons/logo.svg";
+import GithubCorner from "./icons/github-corner.svg";
+import ColorPicker from "./ColorPicker";
+export default {
+  components: {
+    Logo, 
+    GithubCorner,
+    ColorPicker
+  },
+  computed: {
+    data () {
+      return this.$page.frontmatter
+    }
+  }
+}
+</script>-->
+	<script>
+		var activeButtonId="off"
+		iro.use(iroDynamicCss,{throttle: 100});
+		var ws = new WebSocket("ws://10.42.96.10:8765/")
+		var colorPicker = new iro.ColorPicker('#color-picker-container',
+			{css:
+				{':root':
+					{'--bgcolor':'$color',
+
+					},
+				},
+			}
+		);
+		colorPicker.on("color:change",function(color){
+			ws.send(color.rgb['r']+":"+color.rgb['g']+":"+color.rgb['b']);
+			buttonOff();
+		});
+		function buttonUpdate(id){
+			document.getElementById(activeButtonId).className = "button button--invert";
+			document.getElementById(id).className = "button";
+
+			activeButtonId=id;
+		}
+		function buttonOff(){
+			document.getElementById(activeButtonId).className = "button button--invert";
+		}
+		function sendColor(rd,gn,bl,id){
+			ws.send(rd+":"+gn+":"+bl);
+			colorPicker.color.rgb = {r:rd ,g:gn ,b:bl};
+			buttonUpdate(id);
+			
+		}
+		function anim(a){
+			ws.send("anim."+a);
+			buttonUpdate(a);
+		}
+	</script>
+<link rel="stylesheet" type="text/css" href="./res/config">
+</body>
+</html>
