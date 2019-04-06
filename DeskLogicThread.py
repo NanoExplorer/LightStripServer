@@ -48,7 +48,6 @@ class ImageManager:
             off = []
             for i in range(pixels_off):
                 off.append(int((i+1)*self.STRIPLEN/(pixels_off+1)))
-            #print(off)
             self.dither.append(off)
 
     def write(self, red,green,blue):
@@ -59,7 +58,6 @@ class ImageManager:
         #print('set anim 0')
         if red < 92:
             r_off=self.dither[red]
-            print(r_off)
         if green < 92:
             g_off=self.dither[green]
         if blue < 92:
@@ -67,36 +65,34 @@ class ImageManager:
 
         for x in range(self.STRIPLEN):
             blue1,green1,red1 = blue,green,red
-            if x in b_off:
-                blue1-=1
-            if x in g_off:
-                green1-=1
-            if x in r_off:
-                red1-=1
-            self.setpixel((red1,green1,blue1), x)
+            self.setpixel((red1,green1,blue1), x,
+                rdim=x in r_off,
+                bdim=x in b_off,
+                gdim=x in g_off)
         #print('outputting solid color')
         self.output()
         
-    def setpixel(self, pixel, position):
+    def setpixel(self, pixel, position, rdim=False,
+                 gdim=False,
+                 bdim=False
+        ):
         """
         Sets a certain pixel of the strip (at 'position') to the color tuple 'pixel'
         """
         index = position * 3
         red, green, blue = pixel
-        #self.lights[index + 1] = 0x80 | (green//2)#self.gamma[green]
-        #self.lights[index + 2] = 0x80 | (red//2)#self.gamma[red]
-        #self.lights[index + 3] = 0x80 | (blue//2)#self.gamma[blue]
 
-        self.lights[index + 1] = self.gamma[green]
-        self.lights[index + 2] = self.gamma[red]
-        self.lights[index + 3] = self.gamma[blue]
+        self.lights[index + 1] = self.gamma[green]-gdim
+        self.lights[index + 2] = self.gamma[red]-rdim
+        self.lights[index + 3] = self.gamma[blue]-bdim #Just like in C, 
+        #False acts like 0 and True acts like 1...
+        #Not sure how I feel about this but I'll totally abuse it.
     def setrawpixel(self,pixel,position):
         index = position * 3
         red, green, blue = pixel
-        self.lights[index + 1] = 0x80 | (green//2)#self.gamma[green]
-        self.lights[index + 2] = 0x80 | (red//2)#self.gamma[red]
-        self.lights[index + 3] = 0x80 | (blue//2)#self.gamma[blue]
-        
+        self.lights[index + 1] = 0x80 | (green//2)
+        self.lights[index + 2] = 0x80 | (red//2)
+        self.lights[index + 3] = 0x80 | (blue//2)
     def stop(self):
         try:
             self.timer.cancel()
