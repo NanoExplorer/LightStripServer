@@ -51,9 +51,10 @@ class ImageManager:
             for i in range(pixels_off):
                 off.append(int((i+1)*self.STRIPLEN/(pixels_off+1)))
             self.dither.append(off)
-            print(off)
-    def write(self, red,green,blue):
-        self.allow_anim = 0
+            #print(off)
+    def write(self, red,green,blue,is_anim=False):
+        if not is_anim:
+            self.allow_anim = 0
         r_off=[]
         g_off=[]
         b_off=[]
