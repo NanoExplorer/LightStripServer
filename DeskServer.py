@@ -70,7 +70,7 @@ def rcv_color(websocket,path):
     logging.info("Connection established with {}.".format(addr))
     while True:
         try:
-            data = yield from websocket.recv() 
+            data = yield from websocket.recv()
             try:
                 worker.sendMessage(data)
                 logging.info("Received: {}".format(data))

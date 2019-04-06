@@ -30,7 +30,7 @@ class ImageManager:
         self.dither()
         self.periodicRefresh(600)
 
-    def dither():
+    def dither(self):
         #This is probably not the best way to do this.
         #But it works, and it only runs once.
         edges=[1,44,53,61,68,73,78,83,87,92]
