@@ -3,6 +3,7 @@ import time
 import random
 import traceback
 import animations
+DITHER_CEIL=173
 class ImageManager:
     def __init__(self):
         self.gamma = bytearray(256)
@@ -44,7 +45,7 @@ class ImageManager:
         self.dither = [[]] #contains number of off pixels
         edge=0
         i_numsteps=0
-        for inputVal in range(1,131):
+        for inputVal in range(1,DITHER_CEIL):
             if inputVal >= edges[edge+1]:
                 edge+=1
                 i_numsteps+=1
@@ -65,11 +66,11 @@ class ImageManager:
         g_off=[]
         b_off=[]
         #print('set anim 0')
-        if red < 131:
+        if red < DITHER_CEIL:
             r_off=self.dither[red]
-        if green < 131:
+        if green < DITHER_CEIL:
             g_off=self.dither[green]
-        if blue < 131:
+        if blue < DITHER_CEIL:
             b_off=self.dither[blue]
 
         for x in range(self.STRIPLEN):
