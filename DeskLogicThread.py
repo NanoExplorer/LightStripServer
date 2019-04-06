@@ -123,7 +123,7 @@ class ImageManager:
                     for i,rgb in enumerate(l):
                         self.setrawpixel(rgb,i)
                 elif self.animation.solidColor():
-                    self.write(l[0],l[1],l[2])
+                    self.write(l[0],l[1],l[2],is_anim=True)
                 else:
                     for i,rgb in enumerate(l):
                         self.setpixel(rgb,i)
