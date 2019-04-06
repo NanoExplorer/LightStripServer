@@ -43,13 +43,15 @@ class ImageManager:
                 edge+=1
                 i_numsteps+=1
             ns = numsteps[i_numsteps]
-            pixels_on = int(self.STRIPLEN*inputVal/ns)
+            ivdiff=edges[edge]
+            #print(inputVal,edge,ns)
+            pixels_on = int(self.STRIPLEN*(inputVal-ivdiff)/ns)
             pixels_off=self.STRIPLEN-pixels_on
             off = []
             for i in range(pixels_off):
                 off.append(int((i+1)*self.STRIPLEN/(pixels_off+1)))
             self.dither.append(off)
-
+            print(off)
     def write(self, red,green,blue):
         self.allow_anim = 0
         r_off=[]
