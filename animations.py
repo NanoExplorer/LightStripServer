@@ -267,6 +267,6 @@ class ColorCycle(Animation):
         delta=time.time()-self.startTime
         currHue=(delta/self.slowness)%1
         r,g,b=[int(x*255) for x in colorsys.hsv_to_rgb(currHue,1,1)]
-        for i in self.arraylen:
+        for i in range(self.arraylen):
             self.lights[i] = (r,g,b)
 

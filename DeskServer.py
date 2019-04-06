@@ -94,7 +94,7 @@ if __name__ == "__main__":
         worker = DeskLogicThread.WorkerThread()    
         worker.messageOverride("anim.fireworks")
         signal.signal(signal.SIGINT, signal_handler)   
-        subprocess.Popen(["python3","-m","http.server","80","--directory","web/"])
+        subprocess.Popen(["python3","-m","http.server","80"],cwd="web/")
         main()
         #redlight()
     finally:
