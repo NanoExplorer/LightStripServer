@@ -121,6 +121,8 @@ class ImageManager:
                 if self.animation.needsRaw():
                     for i,rgb in enumerate(l):
                         self.setrawpixel(rgb,i)
+                elif self.animation.solidColor():
+                    self.write(l[0],l[1],l[2])
                 else:
                     for i,rgb in enumerate(l):
                         self.setpixel(rgb,i)

@@ -67,6 +67,8 @@ class Animation:
         pass
     def needsRaw(self):
         return False
+    def solidColor(self):
+        return False
 
 class Strobe(Animation):
     def __init__(self,length):
@@ -263,10 +265,11 @@ class ColorCycle(Animation):
         Animation.__init__(self,length)
         self.slowness=30
         self.currHue=0
+    def solidColor(self):
+        return True
     def update(self):
         delta=time.time()-self.startTime
         currHue=(delta/self.slowness)%1
         r,g,b=[int(x*255) for x in colorsys.hsv_to_rgb(currHue,1,1)]
-        for i in range(self.arraylen):
-            self.lights[i] = (r,g,b)
+        self.lights = (r,g,b)
 
