@@ -23,22 +23,28 @@ class ImageManager:
         self.lights[0] = 0
         self.lights[self.ARRAYLEN-1] = 0
         self.lights[self.ARRAYLEN-2] = 0
+        self.dither()
         self.DEV = '/dev/spidev1.0'
         self.spidev = open(self.DEV, 'wb')
         self.allow_anim = 0
         self.allow_timer = True
-        self.dither()
+
         self.periodicRefresh(600)
 
     def dither(self):
         #This is probably not the best way to do this.
         #But it works, and it only runs once.
-        edges=[1,44,53,61,68,73,78,83,87,92]
+        edges=[]
+        lastval=0
+        for i,g in enumerate(self.gamma):
+            if i!=0 and lastval != g:
+                edges.append(i)
+            lastval=g
         numsteps=[edges[x+1]-edges[x] for x in range(len(edges)-1)]
         self.dither = [[]] #contains number of off pixels
         edge=0
         i_numsteps=0
-        for inputVal in range(1,92):
+        for inputVal in range(1,131):
             if inputVal >= edges[edge+1]:
                 edge+=1
                 i_numsteps+=1
@@ -59,11 +65,11 @@ class ImageManager:
         g_off=[]
         b_off=[]
         #print('set anim 0')
-        if red < 92:
+        if red < 131:
             r_off=self.dither[red]
-        if green < 92:
+        if green < 131:
             g_off=self.dither[green]
-        if blue < 92:
+        if blue < 131:
             b_off=self.dither[blue]
 
         for x in range(self.STRIPLEN):
