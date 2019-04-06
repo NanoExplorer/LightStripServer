@@ -27,7 +27,28 @@ class ImageManager:
         self.spidev = open(self.DEV, 'wb')
         self.allow_anim = 0
         self.allow_timer = True
+        self.dither()
         self.periodicRefresh(600)
+
+    def dither():
+        #This is probably not the best way to do this.
+        #But it works, and it only runs once.
+        edges=[1,44,53,61,68,73,78,83,87,92]
+        numsteps=[edges[x+1]-edges[x] for i in range(len(edges)-1)]
+        self.dither = [] #contains number of off pixels
+        edge=0
+        i_numsteps=0
+        for inputVal in range(1,92):
+            if inputVal >= edges[edge+1]:
+                edge+=1
+                i_numsteps+=1
+            ns = numsteps[i_numsteps]
+            pixels_on = int(self.STRIPLEN*inputVal/ns)
+            pixels_off=self.STRIPLEN-pixels_on
+            off = []
+            for i in range(pixels_off):
+                off.append(int((i+1)*self.STRIPLEN/(pixels_off+1)))
+            self.dither.append(off)
 
     def write(self, red,green,blue):
         self.allow_anim = 0
@@ -35,31 +56,21 @@ class ImageManager:
         g_off=[]
         b_off=[]
         #print('set anim 0')
-        if red < 28:
-            red_pixels_on = int(self.STRIPLEN*red/28)
-            num_reds_off=self.STRIPLEN-red_pixels_on 
-            for i in range(num_reds_off):
-                r_off.append(int((i+1)*self.STRIPLEN/(num_reds_off+1)))
-        if green < 28:
-            green_pixels_on = int(self.STRIPLEN*green/28)
-            num_grns_off=self.STRIPLEN-green_pixels_on 
-            for i in range(num_grns_off):
-                g_off.append(int((i+1)*self.STRIPLEN/(num_grns_off+1)))
-        if blue < 28:
-            blu_pixels_on = int(self.STRIPLEN*blue/28)
-            num_blus_off=self.STRIPLEN-blu_pixels_on 
-            for i in range(num_blus_off):
-                b_off.append(int((i+1)*self.STRIPLEN/(num_blus_off+1)))
-
+        if red < 92:
+            r_off=self.dither[red]
+        if green < 92:
+            g_off=self.dither[green]
+        if blue < 92:
+            b_off=self.dither[blue]
 
         for x in range(self.STRIPLEN):
             blue1,green1,red1 = blue,green,red
             if x in b_off:
-                blue1=0
+                blue1-=1
             if x in g_off:
-                green1=0
+                green1-=1
             if x in r_off:
-                red1=0
+                red1-=1
             self.setpixel((red1,green1,blue1), x)
         #print('outputting solid color')
         self.output()
