@@ -34,8 +34,8 @@ class ImageManager:
         #This is probably not the best way to do this.
         #But it works, and it only runs once.
         edges=[1,44,53,61,68,73,78,83,87,92]
-        numsteps=[edges[x+1]-edges[x] for i in range(len(edges)-1)]
-        self.dither = [] #contains number of off pixels
+        numsteps=[edges[x+1]-edges[x] for x in range(len(edges)-1)]
+        self.dither = [[]] #contains number of off pixels
         edge=0
         i_numsteps=0
         for inputVal in range(1,92):
@@ -48,6 +48,7 @@ class ImageManager:
             off = []
             for i in range(pixels_off):
                 off.append(int((i+1)*self.STRIPLEN/(pixels_off+1)))
+            #print(off)
             self.dither.append(off)
 
     def write(self, red,green,blue):
@@ -58,6 +59,7 @@ class ImageManager:
         #print('set anim 0')
         if red < 92:
             r_off=self.dither[red]
+            print(r_off)
         if green < 92:
             g_off=self.dither[green]
         if blue < 92:
