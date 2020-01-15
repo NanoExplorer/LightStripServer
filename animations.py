@@ -285,6 +285,7 @@ class FadeOut(Animation):
     def update(self):
         delta=time.time()-self.startTime
         offset=(delta/self.slowness)*255
-        r,g,b=[min(0,int(c-offset)) for c in self.baseColor]
+        r,g,b=[max(0,int(c-offset)) for c in self.baseColor]
         self.lights = (r,g,b)
+
 
