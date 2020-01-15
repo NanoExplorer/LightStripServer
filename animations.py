@@ -43,6 +43,8 @@ def getAnimator(name,length):
         return Fireworks(length)
     if name == 'colorcycle':
         return ColorCycle(length)
+    if name == 'fadeout':
+        return FadeOut(length)
 
 def _addTuples(a,b):
     c1 = a[0] + b[0]
@@ -271,5 +273,18 @@ class ColorCycle(Animation):
         delta=time.time()-self.startTime
         currHue=(delta/self.slowness)%1
         r,g,b=[int(x*255) for x in colorsys.hsv_to_rgb(currHue,1,1)]
+        self.lights = (r,g,b)
+
+class FadeOut(Animation):
+    def __init__(self,length):
+        Animation.__init__(self,length)
+        self.slowness=30*60 #seconds
+        self.baseColor=[255,0,0]
+    def solidColor(self):
+        return True
+    def update(self):
+        delta=time.time()-self.startTime
+        offset=(delta/self.slowness)*255
+        r,g,b=[min(0,int(c-offset)) for c in self.baseColor]
         self.lights = (r,g,b)
 
